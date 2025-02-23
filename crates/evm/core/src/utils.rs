@@ -72,6 +72,11 @@ pub fn apply_chain_and_block_specific_env_changes<N: Network>(
         }
     }
 
+    if env.block.prevrandao.is_none() {
+        // <https://github.com/foundry-rs/foundry/issues/4232>
+        env.block.prevrandao = Some(B256::random());
+    }
+
     // if difficulty is `0` we assume it's past merge
     if block.header().difficulty().is_zero() {
         env.block.difficulty = env.block.prevrandao.unwrap_or_default().into();
